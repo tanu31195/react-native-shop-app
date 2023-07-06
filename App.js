@@ -1,20 +1,79 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { StatusBar } from "expo-status-bar";
 
-export default function App() {
+import { Colors } from "./constants/styles";
+import { SCREENS } from "./constants/messages";
+
+import LoginScreen from "./screens/LoginScreen";
+import ProductsScreen from "./screens/ProductsScreen";
+import UserDetailScreen from "./screens/UserDetailScreen";
+import CartScreen from "./screens/CartScreen";
+
+const Stack = createNativeStackNavigator();
+const BottomTab = createBottomTabNavigator();
+
+function AuthStack() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: { backgroundColor: Colors.primary },
+        headerTintColor: Colors.white,
+        contentStyle: { backgroundColor: Colors.lightWhite },
+      }}
+    >
+      <Stack.Screen name={SCREENS.LOGIN.name} component={LoginScreen} />
+    </Stack.Navigator>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+function AuthenticatedStack() {
+  return (
+    <BottomTab.Navigator
+      screenOptions={{
+        headerStyle: { backgroundColor: Colors.primary },
+        headerTintColor: Colors.white,
+        contentStyle: { backgroundColor: Colors.lightWhite },
+      }}
+    >
+      <BottomTab.Screen
+        name={SCREENS.PRODUCTS.name}
+        component={ProductsScreen}
+        options={{
+          title: SCREENS.PRODUCTS.title,
+        }}
+      />
+      <BottomTab.Screen
+        name={SCREENS.CART.name}
+        component={CartScreen}
+        options={{
+          title: SCREENS.CART.title,
+        }}
+      />
+      <BottomTab.Screen
+        name={SCREENS.USER_DETAIL.name}
+        component={UserDetailScreen}
+        options={{
+          title: SCREENS.USER_DETAIL.title,
+        }}
+      />
+    </BottomTab.Navigator>
+  );
+}
+
+function Navigation() {
+  return (
+    <NavigationContainer>
+      <AuthenticatedStack />
+    </NavigationContainer>
+  );
+}
+export default function App() {
+  return (
+    <>
+      <StatusBar style='light' />
+      <Navigation />
+    </>
+  );
+}
