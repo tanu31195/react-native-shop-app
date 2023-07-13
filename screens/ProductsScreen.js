@@ -1,12 +1,15 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { useLayoutEffect } from "react";
+import ProductsList from "../components/ProductsList/ProductsList";
+import useFetch from "../hooks/useFetch";
+import NoDataMessage from "../components/NoDataMessage";
+import { ENDPOINTS, MESSAGES } from "../constants/messages";
 
 export default function ProductsScreen() {
-  return (
-    <View>
-      <Text>ProductsScreen</Text>
-    </View>
-  )
-}
+  const { data } = useFetch(ENDPOINTS.PRODUCTS, {});
 
-const styles = StyleSheet.create({})
+  if (data.length === 0) {
+    return <NoDataMessage>{MESSAGES.NO_CATEGORY_MEALS}</NoDataMessage>;
+  }
+
+  return <ProductsList items={data.products} />;
+}
